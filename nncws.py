@@ -6,18 +6,18 @@ class NNCWS:
     
     def __init__(self):
         self.nb_gram = 7
-        self.nncw_weights = np.load('nncw_weights.npy')
+        self.nncws_weights = np.load('nncws_weights.npy')
         self.word2id = json.load(open('word2id.json'))
         self.word2id = defaultdict(lambda: len(self.word2id)+1, self.word2id)
         self.trans_proba = {'ss':1, 'sb':1, 'bm':1, 'be':1, 'mm':1, 'me':1, 'es':1, 'eb':1}
         self.trans_proba = {i:np.log(j) for i,j in self.trans_proba.iteritems()}
     
     def core_predict(self, text):
-        text_vectors = np.array([[self.nncw_weights[0][j] for j in i] for i in text])
+        text_vectors = np.array([[self.nncws_weights[0][j] for j in i] for i in text])
         flatten = text_vectors.reshape((text_vectors.shape[0], text_vectors.shape[1]*text_vectors.shape[2]))
-        dense = np.dot(flatten, self.nncw_weights[1]) + self.nncw_weights[2]
+        dense = np.dot(flatten, self.nncws_weights[1]) + self.nncws_weights[2]
         relu = (dense > 0)*dense
-        dense = np.dot(relu, self.nncw_weights[3])
+        dense = np.dot(relu, self.nncws_weights[3])
         softmax = np.exp(dense)
         softmax_sum = softmax.sum(axis=1)
         softmax_sum = np.repeat(softmax_sum, 4).reshape((softmax_sum.shape[0], 4))
