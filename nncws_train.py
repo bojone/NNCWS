@@ -77,4 +77,4 @@ model.summary()
 batch_size = 4096
 nb_epoch = 30
 model.fit_generator(data_generator(batch_size), samples_per_epoch=samples_per_epoch, nb_epoch=nb_epoch)
-np.save('nncw_weights', model.get_weights())
+np.save('nncws_weights', model.get_weights())
